@@ -1,0 +1,78 @@
+<h1>{{ accion | titlecase }} Héroe</h1>
+<form [formGroup]="heroeForm">
+  <div class="row mb-3">
+    <div class="col-md-2 col-sm-12">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input
+        type="text"
+        id="nombre"
+        class="form-control form-control-sm"
+        formControlName="nombre"
+        placeholder="Introduzca un nombre"
+        [ngClass]="{ 'is-invalid': campoInvalido('nombre') }"
+      />
+      <div class="invalid-feedback">Campo obligatorio.</div>
+    </div>
+    <div class="col-md-2 col-sm-12">
+      <label for="raza" class="form-label">Raza</label>
+      <select
+        id="raza"
+        class="form-select form-select-sm"
+        [ngClass]="{ 'is-invalid': campoInvalido('raza') }"
+        formControlName="raza"
+      >
+        <option value="" disabled>Seleccione...</option>
+        <option>Humano</option>
+        <option>Radioactivo</option>
+        <option>Robot</option>
+      </select>
+      <div class="invalid-feedback">Campo obligatorio.</div>
+    </div>
+    <div class="col-md-2 col-sm-12">
+      <label for="base" class="form-label">Base</label>
+      <input
+        type="text"
+        id="base"
+        class="form-control form-control-sm"
+        [ngClass]="{ 'is-invalid': campoInvalido('base') }"
+        formControlName="base"
+        placeholder="Introduzca la base"
+      />
+      <div class="invalid-feedback">Campo obligatorio.</div>
+    </div>
+    <div class="col-md-5 col-sm-12">
+      <label for="imagen" class="form-label">Url de imagen</label>
+      <input
+        type="text"
+        id="imagen"
+        class="form-control form-control-sm"
+        [ngClass]="{ 'is-invalid': imagen.hasError('pattern') }"
+        formControlName="imagen"
+        placeholder="Ej: https://www.superherodb.com/pictures2/portraits/10/100/5.jpg"
+      />
+      <div class="invalid-feedback">Formato incorrecto.</div>
+    </div>
+    <div class="col-md-1 col-sm-12">
+      <ng-container *ngIf="imagenSegura; else sinImagen">
+        <img [src]="imagenSegura" class="img-fluid" />
+      </ng-container>
+      <ng-template #sinImagen>
+        <img [src]="urlSinImagen" class="img-fluid" />
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="row justify-content-end">
+    <div class="col-md-2 col-sm-12 text-end">
+      <button
+        type="button"
+        class="btn btn-sm btn-success"
+        [disabled]="heroeForm.invalid"
+        title="Guardar"
+        (click)="guardarHeroe()"
+      >
+        <i class="bi bi-floppy mr-2"></i>&nbsp;&nbsp;Guardar héroe
+      </button>
+    </div>
+  </div>
+</form>

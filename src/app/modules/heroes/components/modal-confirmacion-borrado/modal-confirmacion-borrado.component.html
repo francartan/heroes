@@ -1,0 +1,20 @@
+<div class="d-flex px-3 bg-dark text-white cabecera">
+  <h3 class="modal-title mt-2">Aviso</h3>
+  <i
+    class="bi bi-x-circle-fill bi-lg ms-auto mt-2"
+    style="cursor: pointer"
+    title="Cerrar"
+    (click)="cancelar()"
+  ></i>
+</div>
+<div class="modal-body">
+  ¿Estás seguro de que deseas borrar el héroe "{{ nombreHeroe }}"?
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-sm btn-secondary" (click)="cancelar()">
+    Cancelar
+  </button>
+  <button type="button" class="btn btn-sm btn-success" (click)="aceptar()">
+    Confirmar
+  </button>
+</div>
