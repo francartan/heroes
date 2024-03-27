@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { debounceTime, filter, fromEvent, map, switchMap, tap } from 'rxjs';
 import { HeroesService } from '../../../../services/heroes/heroes.service';
 import { SpinnerService } from '../../../../services/spinner/spinner-service';
@@ -13,7 +13,8 @@ import { ModalConfirmacionBorradoComponent } from '../modal-confirmacion-borrado
   templateUrl: './heroes-list.component.html',
   styleUrls: ['./heroes-list.component.css'],
 })
-export class HeroesListComponent {
+export class HeroesListComponent implements AfterViewInit {
+  @ViewChild('inputNombre') inputNombre!: ElementRef<HTMLInputElement>;
   heroesResponse: IHeroe[] = [];
   urlSinImagen: string = './assets/images/nodisponible.png';
 
@@ -24,20 +25,18 @@ export class HeroesListComponent {
     private toastr: ToastrService,
     private modalService: NgbModal
   ) {
-    // Hace la llamada inicial que devuelve todos los héroes
     this.obtenerHeroes();
   }
 
-  ngOnInit() {
-    /* Lo hago así sin un formulario reactivo ya que no es necesario usarlos aquí pues sólo hay un campo y sin validaciones,
-       por lo que no tiene sentido usar aquí un formulario reactivo, me parece mejor idea hacerlo así
-    */
-    const input = document.getElementById('inputNombre');
-    if (input) {
-      const valorInput$ = fromEvent<KeyboardEvent>(input, 'keyup');
+  ngOnInit() {}
 
-      // Se crea un observable del evento keyup del input y se pasa por un tiempo de espera para evitar las múltiples llamadas al back
-      // También se muestra un spinner para simular la carga hasta que termina la llamada que tiene un delay de 1 segundo
+  ngAfterViewInit() {
+    if (this.inputNombre) {
+      const valorInput$ = fromEvent<KeyboardEvent>(
+        this.inputNombre.nativeElement,
+        'keyup'
+      );
+
       valorInput$
         .pipe(
           debounceTime(500),
@@ -78,17 +77,22 @@ export class HeroesListComponent {
 
   borrarHeroe(heroe: IHeroe) {
     this.spinnerService.show();
-    this.heroesService.deleteHeroe(heroe).subscribe({
-      next: (res) => {
-        this.toastr.success(res.mensaje, 'Eliminado');
-        this.spinnerService.hide();
-        // Volvemos a llamar a la búsqueda para recargar la tabla
-        this.obtenerHeroes();
-      },
-      error: (err) => {
-        this.toastr.error(err);
-      },
-    });
+    this.heroesService
+      .deleteHeroe(heroe)
+      .pipe(switchMap(() => this.heroesService.obtenerListadoHeroes()))
+      .subscribe({
+        next: (res) => {
+          this.toastr.success(
+            `Héroe ${heroe.nombre} eliminado correctamente`,
+            'Eliminado'
+          );
+          this.spinnerService.hide();
+        },
+        error: (err) => {
+          this.toastr.error(err);
+          this.spinnerService.hide();
+        },
+      });
   }
 
   abrirModalConfirmacionBorrado(heroe: IHeroe) {

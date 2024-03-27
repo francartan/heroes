@@ -65,21 +65,17 @@ export class HeroeComponent {
     this.accion = this.router.url.split('/')[2];
 
     if (this.accion === 'editar') {
-      // Esto en una aplicación normal conectada con una api, se podría hacer también consultando al back con un id
       this.heroe = this.heroesService.getHeroeSeleccionadoTabla();
       if (this.heroe) {
-        // Actualizar el formulario
         this.heroeForm.patchValue(this.heroe);
         this.imagenSegura = this.sanitizer.bypassSecurityTrustResourceUrl(
           this.heroe.imagen
         );
       } else {
-        // El usuario ha recargado y se ha perdido el valor del héroe, por lo que se redirige al listado
         this.router.navigate(['heroes']);
       }
     }
 
-    // Observable para la imagen
     this.heroeForm
       .get('imagen')
       ?.valueChanges.pipe(
@@ -89,7 +85,6 @@ export class HeroeComponent {
       .subscribe((imagenSegura) => {
         this.imagenSegura = imagenSegura;
       });
-    // Observable para convertir en mayúscula el campo de nombre
     this.heroeForm
       .get('nombre')
       ?.valueChanges.pipe(distinctUntilChanged())

@@ -50,7 +50,6 @@ export class HeroesService {
 
   constructor(private http: HttpClient) {}
 
-  // Delay de 1 segundo para simular una llamada a una API y el filtro para simular también el filtrado del servicio
   obtenerListadoHeroes(): Observable<IHeroe[]> {
     return of<IHeroeResponse>(this.datosMockHeroes).pipe(
       delay(1000),
@@ -58,7 +57,6 @@ export class HeroesService {
     );
   }
 
-  // Delay de 1 segundo para simular una llamada a una API y el filtro para simular también el filtrado del servicio
   obtenerListadoHeroesPorNombre(nombre: string): Observable<IHeroe[]> {
     return of<IHeroeResponse>(this.datosMockHeroes).pipe(
       delay(1000),
@@ -70,7 +68,6 @@ export class HeroesService {
     );
   }
 
-  // Este servicio con una API real, llamaría con el id a una url y le pasaría en el body el objeto en cuestión
   putModificarHeroe(heroe: IHeroe, id: number) {
     return of<{ codigo: number; mensaje: string }>({
       codigo: 200,
@@ -89,10 +86,7 @@ export class HeroesService {
     );
   }
 
-  // Este servicio con una API real, llamaría a una url y le pasaría en el body el objeto en cuestión
   postCrearHeroe(heroe: IHeroe) {
-    // Se genera un número aleatorio entre 1 y 1000 para simular la generación del back de un id(confío en que no coincida con los que ya existen, son datos mockeados)
-    // en el back sería un contador, lo sé, pero es una aplicación de prueba
     return of<{ codigo: number; mensaje: string }>({
       codigo: 200,
       mensaje: `Héroe ${heroe.nombre} creado correctamente`,
@@ -107,7 +101,6 @@ export class HeroesService {
   }
 
   deleteHeroe(heroe: IHeroe) {
-    // Se llamaría al back pasando el id, pero aquí está moqueado a mi estilo para hacer la aplicación mockeada
     return of<{ codigo: number; mensaje: string }>({
       codigo: 200,
       mensaje: `Héroe ${heroe.nombre} eliminado correctamente`,
